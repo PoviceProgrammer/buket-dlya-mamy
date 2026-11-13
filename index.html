@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Маленький сюрприз для мамы.">
+  <meta name="theme-color" content="#f9f1e8">
+  <title>Для мамы</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="site">
+    <section class="welcome screen" id="welcome" aria-labelledby="greeting">
+      <div class="cover" aria-hidden="true">
+        <div class="cover-art flowers flowers--bouquet"></div>
+      </div>
+      <div class="welcome-copy">
+        <span class="ornament" aria-hidden="true">✿</span>
+        <h1 id="greeting">Привет, мам!</h1>
+        <p>У меня для тебя маленький сюрприз.</p>
+        <button class="pill" id="start" type="button">Открыть <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="cards screen" id="cards" aria-labelledby="card-title" hidden>
+      <div class="card-stage">
+        <button class="envelope" id="envelope" type="button" aria-describedby="card-hint">
+          <span class="envelope-back" aria-hidden="true"></span>
+          <span class="insert" aria-hidden="true"><span class="flowers flowers--peony" id="card-art"></span></span>
+          <span class="envelope-pocket" aria-hidden="true"></span>
+          <span class="envelope-flap" aria-hidden="true"></span>
+          <span class="seal" aria-hidden="true">♥</span>
+          <span class="sr-only" id="open-label">Открыть первую открытку</span>
+        </button>
+      </div>
+      <h2 id="card-title">Это для тебя</h2>
+      <p id="card-hint">Нажми на открытку, чтобы открыть</p>
+      <div class="progress" id="progress" aria-label="Открытка 1 из 3" role="img">
+        <span class="current"></span><span></span><span></span>
+      </div>
+    </section>
+
+    <section class="final screen" id="final" aria-labelledby="birthday" hidden>
+      <article class="letter">
+        <div class="letter-art flowers flowers--bouquet" aria-hidden="true"></div>
+        <h2 id="birthday" tabindex="-1">Мам, я собрал для тебя букет из открыток.</h2>
+        <div class="letter-text">
+          <p>Надеюсь, тебе понравится!</p>
+          <p>Желаю тебе здоровья и побольше таких дней, когда можно просто порадовать себя. Спасибо, что всегда находишь время для меня.</p>
+          <p class="letter-love">С днём рождения, мам! Очень тебя люблю <span aria-hidden="true">❤️</span></p>
+        </div>
+      </article>
+      <button class="replay" id="replay" type="button">Посмотреть ещё раз <span aria-hidden="true">↻</span></button>
+    </section>
+  </main>
+</body>
+</html>
