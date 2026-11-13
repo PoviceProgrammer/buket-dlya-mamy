@@ -10,6 +10,8 @@ const progress = document.querySelector("#progress");
 const dots = Array.from(progress.children);
 const birthday = document.querySelector("#birthday");
 const replay = document.querySelector("#replay");
+const bouquet = document.querySelector("#bouquet");
+const bouquetNote = document.querySelector("#bouquet-note");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const greetings = [
@@ -78,10 +80,16 @@ function renderCard() {
   dots.forEach((dot, index) => dot.classList.toggle("current", index === cardIndex));
 }
 
+function setBouquetNote(open) {
+  bouquetNote.hidden = !open;
+  bouquet.setAttribute("aria-expanded", String(open));
+}
+
 function showNextCard() {
   cardIndex += 1;
 
   if (cardIndex === greetings.length) {
+    setBouquetNote(false);
     revealScreen(final, birthday);
   } else {
     renderCard();
@@ -141,4 +149,5 @@ start.addEventListener("click", () => {
 });
 
 envelope.addEventListener("click", openCard);
+bouquet.addEventListener("click", () => setBouquetNote(bouquetNote.hidden));
 replay.addEventListener("click", () => changeScreen(welcome, start));

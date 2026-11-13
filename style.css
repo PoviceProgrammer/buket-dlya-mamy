@@ -228,11 +228,68 @@ p { margin: 0; }
   background: #fffaf3;
   box-shadow: 0 15px 45px #6b3a3421;
 }
-.letter-art { width: clamp(7rem, 26vw, 11rem); aspect-ratio: 1; margin: 0 auto .65rem; border-radius: 50%; }
+.letter-art {
+  position: relative;
+  width: clamp(7rem, 26vw, 11rem);
+  aspect-ratio: 1;
+  margin: 0 auto .65rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+}
+
+.bouquet-heart {
+  position: absolute;
+  top: 48%;
+  right: 3%;
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  aspect-ratio: 1;
+  border: 1px solid #e7cfc4;
+  border-radius: 50%;
+  color: var(--rose);
+  background: #fffaf3;
+  font-size: .8rem;
+  box-shadow: 0 2px 8px #6b3a3433;
+  transition: transform 220ms var(--ease-paper), background-color 220ms ease, color 220ms ease;
+}
+
+.letter-art:hover .bouquet-heart,
+.letter-art[aria-expanded="true"] .bouquet-heart {
+  color: #fffaf3;
+  background: var(--rose);
+  transform: scale(1.1);
+}
+
+.bouquet-note {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 1rem;
+  padding: .35rem .8rem;
+  border: 1px solid #e7cfc4;
+  border-radius: .45rem;
+  color: #713044;
+  background: #f8e9e3;
+  font: italic 1rem/1.45 var(--serif);
+  animation: appear-softly 360ms var(--ease-paper) both;
+}
 .letter h2 { color: #713044; }
 .letter-text { max-width: 28rem; margin: 1.2rem auto 0; }
 .letter-text p + p { margin-top: .85rem; }
 .letter-love { font-family: var(--serif); font-style: italic; color: #713044; }
+.letter-text .letter-signature {
+  margin-top: 1rem;
+  color: #713044;
+  font: italic 1.1rem/1.4 var(--serif);
+  animation: appear-softly 580ms var(--ease-paper) 400ms both;
+}
+
+@keyframes appear-softly {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .replay {
   margin-top: .9rem;
   min-height: 2.75rem;

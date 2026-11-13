@@ -47,12 +47,18 @@
 
     <section class="final screen" id="final" aria-labelledby="birthday" hidden>
       <article class="letter">
-        <div class="letter-art flowers flowers--bouquet" aria-hidden="true"></div>
+        <button class="letter-art flowers flowers--bouquet" id="bouquet" type="button" aria-label="Сюрприз в букете" aria-expanded="false" aria-controls="bouquet-note">
+          <span class="bouquet-heart" aria-hidden="true">♥</span>
+        </button>
+        <div class="bouquet-surprise" aria-live="polite">
+          <p class="bouquet-note" id="bouquet-note" hidden>И ещё одно объятие на потом</p>
+        </div>
         <h2 id="birthday" tabindex="-1">Мам, я собрал для тебя букет из открыток.</h2>
         <div class="letter-text">
           <p>Надеюсь, тебе понравится!</p>
           <p>Желаю тебе здоровья и побольше таких дней, когда можно просто порадовать себя. Спасибо, что всегда находишь время для меня.</p>
           <p class="letter-love">С днём рождения, мам! Очень тебя люблю <span aria-hidden="true">❤️</span></p>
+          <p class="letter-signature">Твой Артур</p>
         </div>
       </article>
       <button class="replay" id="replay" type="button">Посмотреть ещё раз <span aria-hidden="true">↻</span></button>
