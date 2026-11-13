@@ -18,16 +18,54 @@ const greetings = [
   { title: "А внутри — самое главное", flower: "bouquet", label: "Открыть последнюю открытку" },
 ];
 
+const easePaper = "cubic-bezier(.22, .75, .25, 1)";
+const cardCopy = [cardTitle, document.querySelector("#card-hint"), progress];
+const canAnimate = () => !reducedMotion.matches && typeof envelope.animate === "function";
+
 let cardIndex = 0;
-let opening = false;
+let activeScreen = welcome;
+let busy = false;
 
-function showScreen(screen, focusTarget) {
-  for (const section of [welcome, cards, final]) {
-    section.hidden = section !== screen;
-  }
+function animate(element, frames, duration, delay = 0) {
+  return element.animate(frames, { duration, delay, easing: easePaper, fill: "both" });
+}
 
+function revealScreen(screen, focusTarget) {
+  activeScreen.hidden = true;
+  screen.hidden = false;
+  activeScreen = screen;
   window.scrollTo(0, 0);
   focusTarget.focus({ preventScroll: true });
+}
+
+function fadeIn(screen) {
+  return animate(screen, [
+    { opacity: 0, transform: "translateY(14px) scale(.985)" },
+    { opacity: 1, transform: "none" },
+  ], 470);
+}
+
+async function changeScreen(screen, focusTarget) {
+  if (busy) return;
+  busy = true;
+
+  if (canAnimate()) {
+    const outgoing = animate(activeScreen, [
+      { opacity: 1, transform: "none" },
+      { opacity: 0, transform: "translateY(-8px) scale(.99)" },
+    ], 210);
+    await outgoing.finished;
+    revealScreen(screen, focusTarget);
+    outgoing.cancel();
+
+    const incoming = fadeIn(screen);
+    await incoming.finished;
+    incoming.cancel();
+  } else {
+    revealScreen(screen, focusTarget);
+  }
+
+  busy = false;
 }
 
 function renderCard() {
@@ -40,44 +78,67 @@ function renderCard() {
   dots.forEach((dot, index) => dot.classList.toggle("current", index === cardIndex));
 }
 
-function finishOpening() {
-  envelope.classList.remove("opening");
-  envelope.removeAttribute("aria-disabled");
-  opening = false;
+function showNextCard() {
   cardIndex += 1;
 
   if (cardIndex === greetings.length) {
-    showScreen(final, birthday);
-    return;
-  }
-
-  renderCard();
-  if (!reducedMotion.matches) {
-    envelope.animate(
-      [{ opacity: 0, transform: "translateY(-32%) scale(.68)" }, { opacity: 1, transform: "none" }],
-      { duration: 320, easing: "ease-out" },
-    );
+    revealScreen(final, birthday);
+  } else {
+    renderCard();
   }
 }
 
+async function openCard() {
+  if (busy) return;
+  busy = true;
+  envelope.setAttribute("aria-disabled", "true");
+
+  if (canAnimate()) {
+    envelope.classList.add("opening");
+    const oldCard = animate(envelope, [
+      { opacity: 1, transform: "none" },
+      { opacity: 0, transform: "translateY(-28px) scale(.96)" },
+    ], 250, 390);
+    const oldCopy = cardCopy.map(element => animate(element, [
+      { opacity: 1 },
+      { opacity: 0 },
+    ], 230, 345));
+    await oldCard.finished;
+
+    envelope.classList.remove("opening");
+    showNextCard();
+    oldCard.cancel();
+    oldCopy.forEach(animation => animation.cancel());
+
+    const incoming = activeScreen === final
+      ? [fadeIn(final)]
+      : [
+          animate(envelope, [
+            { opacity: 0, transform: "translateY(-38px) scale(.86)" },
+            { opacity: 1, transform: "none" },
+          ], 440),
+          ...cardCopy.map(element => animate(element, [
+            { opacity: 0, transform: "translateY(5px)" },
+            { opacity: 1, transform: "none" },
+          ], 360, 60)),
+        ];
+
+    await Promise.all(incoming.map(animation => animation.finished));
+    incoming.forEach(animation => animation.cancel());
+  } else {
+    showNextCard();
+  }
+
+  envelope.removeAttribute("aria-disabled");
+  busy = false;
+}
+
 start.addEventListener("click", () => {
+  if (busy) return;
   cardIndex = 0;
   renderCard();
-  showScreen(cards, envelope);
+  changeScreen(cards, envelope);
 });
 
-envelope.addEventListener("click", () => {
-  if (opening) return;
-
-  opening = true;
-  envelope.setAttribute("aria-disabled", "true");
-  envelope.classList.add("opening");
-
-  if (reducedMotion.matches) {
-    finishOpening();
-  } else {
-    window.setTimeout(finishOpening, 420);
-  }
-});
-
-replay.addEventListener("click", () => showScreen(welcome, start));
+envelope.addEventListener("click", openCard);
+replay.addEventListener("click", () => changeScreen(welcome, start));
