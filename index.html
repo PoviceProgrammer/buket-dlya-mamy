@@ -10,8 +10,8 @@
   <link rel="preload" as="image" href="peony.webp">
   <link rel="preload" as="image" href="roses.webp">
   <link rel="preload" as="image" href="bouquet.webp">
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=5">
+  <script src="script.js?v=5" defer></script>
 </head>
 <body>
   <main class="site">
@@ -40,9 +40,7 @@
       </div>
       <h2 id="card-title">Это для тебя</h2>
       <p id="card-hint">Нажми на открытку, чтобы открыть</p>
-      <div class="progress" id="progress" aria-label="Открытка 1 из 3" role="img">
-        <span class="current"></span><span></span><span></span>
-      </div>
+      <div class="progress" id="progress" role="img"></div>
     </section>
 
     <section class="final screen" id="final" aria-labelledby="birthday" hidden>
@@ -64,5 +62,6 @@
       <button class="replay" id="replay" type="button">Посмотреть ещё раз <span aria-hidden="true">↻</span></button>
     </section>
   </main>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
 </body>
 </html>

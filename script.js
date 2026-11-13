@@ -7,7 +7,7 @@ const cardArt = document.querySelector("#card-art");
 const cardTitle = document.querySelector("#card-title");
 const openLabel = document.querySelector("#open-label");
 const progress = document.querySelector("#progress");
-const dots = Array.from(progress.children);
+const confetti = document.querySelector("#confetti");
 const birthday = document.querySelector("#birthday");
 const replay = document.querySelector("#replay");
 const bouquet = document.querySelector("#bouquet");
@@ -17,8 +17,13 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const greetings = [
   { title: "Это для тебя", flower: "peony", label: "Открыть первую открытку" },
   { title: "Спасибо, что ты рядом", flower: "roses", label: "Открыть вторую открытку" },
+  { title: "Пусть у тебя будет больше поводов улыбаться", flower: "roses", label: "Открыть третью открытку" },
+  { title: "И больше времени на себя", flower: "peony", label: "Открыть четвёртую открытку" },
   { title: "А внутри — самое главное", flower: "bouquet", label: "Открыть последнюю открытку" },
 ];
+
+const dots = greetings.map(() => document.createElement("span"));
+progress.append(...dots);
 
 const easePaper = "cubic-bezier(.22, .75, .25, 1)";
 const cardCopy = [cardTitle, document.querySelector("#card-hint"), progress];
@@ -96,6 +101,35 @@ function showNextCard() {
   }
 }
 
+function celebrate() {
+  const flowers = bouquet.getBoundingClientRect();
+  const colors = ["#c36c82", "#e0a0af", "#e9bf7b", "#91a786", "#a78bb4"];
+  const spread = Math.min(window.innerWidth * .46, 235);
+  const particles = document.createDocumentFragment();
+
+  for (let index = 0; index < 36; index += 1) {
+    const piece = document.createElement("span");
+    const angle = index * (2 * Math.PI / 36);
+    const distance = .65 + Math.random() * .35;
+    const x = Math.cos(angle) * distance * spread;
+    const y = Math.sin(angle) * distance * 98 - 50;
+
+    piece.style.left = `${flowers.left + flowers.width / 2}px`;
+    piece.style.top = `${flowers.top + flowers.height / 2}px`;
+    piece.style.background = colors[index % colors.length];
+    piece.style.setProperty("--burst-x", `${x}px`);
+    piece.style.setProperty("--burst-y", `${y}px`);
+    piece.style.setProperty("--fall-x", `${x * 1.18}px`);
+    piece.style.setProperty("--fall-y", `${y + 185}px`);
+    piece.style.setProperty("--spin", `${Math.round(Math.random() * 720 - 360)}deg`);
+    piece.style.animationDuration = `${1100 + Math.round(Math.random() * 450)}ms`;
+    piece.addEventListener("animationend", () => piece.remove(), { once: true });
+    particles.append(piece);
+  }
+
+  confetti.replaceChildren(particles);
+}
+
 async function openCard() {
   if (busy) return;
   busy = true;
@@ -133,6 +167,8 @@ async function openCard() {
 
     await Promise.all(incoming.map(animation => animation.finished));
     incoming.forEach(animation => animation.cancel());
+
+    if (activeScreen === final && canAnimate()) celebrate();
   } else {
     showNextCard();
   }
@@ -150,4 +186,7 @@ start.addEventListener("click", () => {
 
 envelope.addEventListener("click", openCard);
 bouquet.addEventListener("click", () => setBouquetNote(bouquetNote.hidden));
-replay.addEventListener("click", () => changeScreen(welcome, start));
+replay.addEventListener("click", () => {
+  confetti.replaceChildren();
+  changeScreen(welcome, start);
+});

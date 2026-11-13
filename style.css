@@ -140,10 +140,25 @@ p { margin: 0; }
   --envelope-paper: #bac6ad;
   --envelope-fold: #dbe4ce;
 }
-.envelope[data-card="3"] {
+.envelope[data-card="5"] {
   --envelope-top: #cb9aab;
   --envelope-paper: #e3b4c6;
   --envelope-fold: #f2d7de;
+}
+.envelope[data-card="3"] {
+  --envelope-top: #d9ab84;
+  --envelope-paper: #e9c8a9;
+  --envelope-fold: #f5e3cb;
+}
+.envelope[data-card="4"] {
+  --envelope-top: #b29dc0;
+  --envelope-paper: #c9b7d3;
+  --envelope-fold: #e6d9ed;
+}
+.envelope[data-card="3"] .flowers,
+.envelope[data-card="4"] .flowers {
+  background-size: auto 150%;
+  background-position: center 42%;
 }
 .envelope-back, .envelope-pocket, .envelope-flap {
   position: absolute;
@@ -312,6 +327,34 @@ p { margin: 0; }
   .card-stage { padding-top: 3.8rem; }
 }
 
+.confetti {
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti span {
+  position: absolute;
+  width: .38rem;
+  height: .65rem;
+  border-radius: 2px;
+  animation: confetti-burst 1.35s both;
+}
+.confetti span:nth-child(3n) {
+  height: .4rem;
+  border-radius: 50%;
+}
+
+@keyframes confetti-burst {
+  0% { opacity: 0; transform: scale(.4); animation-timing-function: cubic-bezier(.16, .72, .28, 1); }
+  12% { opacity: 1; }
+  42% { opacity: 1; transform: translate(var(--burst-x), var(--burst-y)) rotate(var(--spin)); animation-timing-function: ease-in; }
+  100% { opacity: 0; transform: translate(var(--fall-x), var(--fall-y)) rotate(calc(var(--spin) + 100deg)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .confetti { display: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
